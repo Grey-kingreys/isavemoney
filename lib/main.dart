@@ -1,30 +1,28 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:isavemoney/providers/transaction_provider.dart';
-import 'package:isavemoney/providers/category_provider.dart';
-import 'package:isavemoney/providers/budget_provider.dart';
-import 'package:isavemoney/providers/dashboard_provider.dart';
-import 'package:isavemoney/providers/settings_provider.dart';
-import 'package:isavemoney/services/database_service.dart';
-import 'package:isavemoney/app/app.dart';
+import 'package:flutter/services.dart';
+import 'app/app.dart';
+import 'utils/app_colors.dart';
 
 void main() async {
+  // Initialisation de Flutter
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Initialiser la base de données
-  final dbService = DatabaseService();
-  await dbService.database;
-
-  runApp(
-    MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => TransactionProvider()),
-        ChangeNotifierProvider(create: (_) => CategoryProvider()),
-        ChangeNotifierProvider(create: (_) => BudgetProvider()),
-        ChangeNotifierProvider(create: (_) => DashboardProvider()),
-        ChangeNotifierProvider(create: (_) => SettingsProvider()),
-      ],
-      child: const BudgetBuddyApp(),
+  // Configuration de la barre de statut
+  SystemChrome.setSystemUIOverlayStyle(
+    const SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent,
+      statusBarIconBrightness: Brightness.dark,
+      systemNavigationBarColor: AppColors.white,
+      systemNavigationBarIconBrightness: Brightness.dark,
     ),
   );
+
+  // Configuration de l'orientation (portrait uniquement)
+  await SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]);
+
+  // Lancement de l'application
+  runApp(const BudgetBuddyApp());
 }
