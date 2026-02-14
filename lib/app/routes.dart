@@ -1,4 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:isavemoney/views/budgets/budget_form_page.dart';
+import 'package:isavemoney/views/budgets/budget_list.dart';
+import 'package:isavemoney/views/settings/settings_page.dart';
+import 'package:isavemoney/views/statistics/statistics_page.dart';
+import 'package:isavemoney/views/transactions/transaction_form_page.dart';
+import 'package:isavemoney/views/transactions/transaction_list.dart';
 import '../views/splash_screen.dart';
 import '../views/onboarding_screen.dart';
 import '../views/dashboard/dashboard_page.dart';
@@ -38,13 +44,13 @@ class AppRoutes {
     dashboard: (context) => const DashboardPage(),
     home: (context) =>
         const DashboardPage(), // home pointe aussi vers le dashboard
-    // Les autres routes seront ajoutées au fur et à mesure
-    // transactions: (context) => const TransactionList(),
-    // transactionAdd: (context) => const TransactionFormPage(),
-    // budgets: (context) => const BudgetList(),
-    // budgetAdd: (context) => const BudgetFormPage(),
-    // statistics: (context) => const StatisticsPage(),
-    // settings: (context) => const SettingsPage(),
+      // Les autres routes seront ajoutées au fur et à mesure
+      transactions: (context) => const TransactionListPage(),
+      transactionAdd: (context) => const TransactionFormPage(),
+      budgets: (context) => const BudgetListPage(),
+      budgetAdd: (context) => const BudgetFormPage(),
+      statistics: (context) => const StatisticsPage(),
+      settings: (context) => const SettingsPage(),
   };
 
   /// Génère une route dynamique avec arguments
@@ -53,17 +59,18 @@ class AppRoutes {
     switch (settings.name) {
       case transactionEdit:
         final args = settings.arguments as Map<String, dynamic>?;
-        // return MaterialPageRoute(
-        //   builder: (context) =>
-        //       TransactionFormPage(transactionId: args?['id'] as int?),
-        // );
+        return MaterialPageRoute(
+          builder: (context) =>
+              TransactionFormPage(transactionId: args?['id'] as int?),
+        );
         return null; // Temporaire jusqu'à la création de la page
 
       case budgetEdit:
         final args = settings.arguments as Map<String, dynamic>?;
-        // return MaterialPageRoute(
-        //   builder: (context) => BudgetFormPage(budgetId: args?['id'] as int?),
-        // );
+        return MaterialPageRoute(
+          builder: (context) =>
+              BudgetFormPage(budgetId: args?['id'] as int?),
+        );
         return null; // Temporaire jusqu'à la création de la page
 
       default:
