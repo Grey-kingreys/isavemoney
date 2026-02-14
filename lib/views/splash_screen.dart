@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../services/onboarding_service.dart';
+import '../app/routes.dart';
 import '../utils/app_colors.dart';
 import '../utils/app_animations.dart';
 
@@ -61,9 +62,10 @@ class _SplashScreenState extends State<SplashScreen>
 
     // Naviguer vers la bonne page
     if (hasSeenOnboarding) {
-      Navigator.of(context).pushReplacementNamed('/dashboard');
+      // Redirection vers le nouveau dashboard
+      AppRoutes.navigateAndRemoveUntil(context, AppRoutes.dashboard);
     } else {
-      Navigator.of(context).pushReplacementNamed('/onboarding');
+      AppRoutes.navigateAndRemoveUntil(context, AppRoutes.onboarding);
     }
   }
 

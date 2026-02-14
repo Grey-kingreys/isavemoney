@@ -1,14 +1,7 @@
 import 'package:flutter/material.dart';
 import '../views/splash_screen.dart';
 import '../views/onboarding_screen.dart';
-import '../views/dashboard_screen.dart';
 import '../views/dashboard/dashboard_page.dart';
-import '../views/transactions/transaction_list.dart';
-import '../views/transactions/transaction_form_page.dart';
-import '../views/budgets/budget_list.dart';
-import '../views/budgets/budget_form_page.dart';
-import '../views/statistics/statistics_page.dart';
-import '../views/settings/settings_page.dart';
 
 /// Classe de gestion des routes de l'application
 class AppRoutes {
@@ -41,8 +34,11 @@ class AppRoutes {
   static Map<String, WidgetBuilder> get routes => {
     splash: (context) => const SplashScreen(),
     onboarding: (context) => const OnboardingScreen(),
-    dashboard: (context) => const DashboardScreen(),
-    home: (context) => const DashboardPage(),
+    // Route vers le nouveau dashboard
+    dashboard: (context) => const DashboardPage(),
+    home: (context) =>
+        const DashboardPage(), // home pointe aussi vers le dashboard
+    // Les autres routes seront ajoutées au fur et à mesure
     // transactions: (context) => const TransactionList(),
     // transactionAdd: (context) => const TransactionFormPage(),
     // budgets: (context) => const BudgetList(),
@@ -56,17 +52,19 @@ class AppRoutes {
     // Routes avec paramètres
     switch (settings.name) {
       case transactionEdit:
-        // final args = settings.arguments as Map<String, dynamic>?;
+        final args = settings.arguments as Map<String, dynamic>?;
         // return MaterialPageRoute(
         //   builder: (context) =>
         //       TransactionFormPage(transactionId: args?['id'] as int?),
         // );
+        return null; // Temporaire jusqu'à la création de la page
 
       case budgetEdit:
-        // final args = settings.arguments as Map<String, dynamic>?;
+        final args = settings.arguments as Map<String, dynamic>?;
         // return MaterialPageRoute(
         //   builder: (context) => BudgetFormPage(budgetId: args?['id'] as int?),
         // );
+        return null; // Temporaire jusqu'à la création de la page
 
       default:
         return null;
@@ -88,20 +86,20 @@ class AppRoutes {
   }
 
   /// Navigation avec remplacement
-  // static Future<T?> navigateAndReplace<T>(
-  //   BuildContext context,
-  //   String routeName, {
-  //   Object? arguments,
-  // }) {
-  //   return Navigator.pushReplacementNamed<T>(
-  //     context,
-  //     routeName,
-  //     arguments: arguments,
-  //   );
-  // }
+  static Future<T?> navigateAndReplace<T extends Object?>(
+    BuildContext context,
+    String routeName, {
+    Object? arguments,
+  }) {
+    return Navigator.pushReplacementNamed<T, Object>(
+      context,
+      routeName,
+      arguments: arguments,
+    );
+  }
 
   /// Navigation avec suppression de toutes les routes précédentes
-  static Future<T?> navigateAndRemoveUntil<T>(
+  static Future<T?> navigateAndRemoveUntil<T extends Object?>(
     BuildContext context,
     String routeName, {
     Object? arguments,

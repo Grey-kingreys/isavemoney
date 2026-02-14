@@ -3,6 +3,7 @@ import '../models/category_model.dart';
 import '../utils/app_colors.dart';
 import '../utils/app_text_styles.dart';
 import '../utils/app_dimensions.dart';
+import '../utils/currency_utils.dart';
 
 /// Widget pour afficher une catégorie sous forme de chip
 class CategoryChip extends StatelessWidget {

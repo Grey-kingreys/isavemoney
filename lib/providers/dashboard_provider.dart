@@ -207,6 +207,29 @@ class DashboardProvider with ChangeNotifier {
     return _budgetSummary!['warning_count'] as int;
   }
 
+  /// Vérifie si le mois est bénéficiaire
+  bool isMonthProfitable() {
+    return monthBalance > 0;
+  }
+
+  /// Obtient le message d'état du budget
+  String getBudgetStatusMessage() {
+    if (_budgetSummary == null || !_budgetSummary!['has_budgets']) {
+      return 'Aucun budget défini';
+    }
+
+    final exceeded = exceededBudgetCount;
+    final warning = warningBudgetCount;
+
+    if (exceeded > 0) {
+      return '$exceeded budget${exceeded > 1 ? 's' : ''} dépassé${exceeded > 1 ? 's' : ''}';
+    } else if (warning > 0) {
+      return '$warning budget${warning > 1 ? 's' : ''} en alerte';
+    } else {
+      return 'Tous les budgets sont OK';
+    }
+  }
+
   /// Rafraîchit les données
   Future<void> refresh() async {
     await loadDashboard();

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../models/onboarding_item.dart';
 import '../widgets/onboarding_slide.dart';
 import '../services/onboarding_service.dart';
+import '../app/routes.dart';
 import '../utils/app_colors.dart';
 import '../utils/app_text_styles.dart';
 import '../utils/app_dimensions.dart';
@@ -35,8 +36,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   Future<void> _completeOnboarding() async {
     await _onboardingService.completeOnboarding();
     if (mounted) {
-      // Navigation vers le dashboard
-      Navigator.of(context).pushReplacementNamed('/dashboard');
+      // Navigation vers le nouveau dashboard
+      AppRoutes.navigateAndRemoveUntil(context, AppRoutes.dashboard);
     }
   }
 

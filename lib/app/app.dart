@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
-import '../views/splash_screen.dart';
-import '../views/onboarding_screen.dart';
-import '../views/dashboard_screen.dart';
+import 'package:provider/provider.dart';
 import '../utils/app_theme.dart';
+import '../providers/dashboard_provider.dart';
+import '../providers/transaction_provider.dart';
+import '../providers/budget_provider.dart';
+import '../providers/category_provider.dart';
+import '../providers/settings_provider.dart';
+import 'routes.dart';
 
 /// Configuration principale de l'application BudgetBuddy
 class BudgetBuddyApp extends StatelessWidget {
@@ -10,27 +14,45 @@ class BudgetBuddyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'BudgetBuddy',
-      debugShowCheckedModeBanner: false,
+    // Wrapper avec tous les providers nécessaires
+    return MultiProvider(
+      providers: [
+        // Provider pour le dashboard
+        ChangeNotifierProvider(create: (_) => DashboardProvider()),
 
-      // Thèmes
-      theme: AppTheme.lightTheme,
-      darkTheme: AppTheme.darkTheme,
-      themeMode: ThemeMode.system,
+        // Provider pour les transactions
+        ChangeNotifierProvider(create: (_) => TransactionProvider()),
 
-      // Routes
-      initialRoute: '/',
-      routes: {
-        '/': (context) => const SplashScreen(),
-        '/onboarding': (context) => const OnboardingScreen(),
-        '/dashboard': (context) => const DashboardScreen(),
-      },
+        // Provider pour les budgets
+        ChangeNotifierProvider(create: (_) => BudgetProvider()),
 
-      // Route par défaut pour les routes inconnues
-      onUnknownRoute: (settings) {
-        return MaterialPageRoute(builder: (context) => const SplashScreen());
-      },
+        // Provider pour les catégories
+        ChangeNotifierProvider(create: (_) => CategoryProvider()),
+
+        // Provider pour les paramètres
+        ChangeNotifierProvider(create: (_) => SettingsProvider()),
+      ],
+      child: Consumer<SettingsProvider>(
+        builder: (context, settingsProvider, child) {
+          return MaterialApp(
+            title: 'BudgetBuddy',
+            debugShowCheckedModeBanner: false,
+
+            // Thèmes
+            theme: AppTheme.lightTheme,
+            darkTheme: AppTheme.darkTheme,
+            themeMode: settingsProvider.darkMode
+                ? ThemeMode.dark
+                : ThemeMode.light,
+
+            // Routes
+            initialRoute: AppRoutes.splash,
+            routes: AppRoutes.routes,
+            onGenerateRoute: AppRoutes.onGenerateRoute,
+            onUnknownRoute: AppRoutes.onUnknownRoute,
+          );
+        },
+      ),
     );
   }
 }
