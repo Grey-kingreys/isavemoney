@@ -85,20 +85,6 @@ class TransactionItem extends StatelessWidget {
                           color: AppColors.textSecondary,
                         ),
                       ),
-                      if (transaction.paymentMethod != null) ...[
-                        Text(
-                          ' • ',
-                          style: AppTextStyles.bodySmall.copyWith(
-                            color: AppColors.textSecondary,
-                          ),
-                        ),
-                        Text(
-                          _getPaymentMethodLabel(transaction.paymentMethod!),
-                          style: AppTextStyles.bodySmall.copyWith(
-                            color: AppColors.textSecondary,
-                          ),
-                        ),
-                      ],
                     ],
                   ),
                   if (transaction.description != null) ...[

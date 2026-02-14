@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../providers/dashboard_provider.dart';
-import '../../widgets/app_drawer.dart';
 import '../../utils/app_colors.dart';
 import '../../utils/app_text_styles.dart';
 import '../../utils/app_dimensions.dart';
@@ -37,58 +36,22 @@ class _DashboardPageState extends State<DashboardPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.background,
-      appBar: _buildAppBar(),
-      drawer: const AppDrawer(),
-      body: RefreshIndicator(
-        onRefresh: _refreshData,
-        color: AppColors.primary,
-        child: Consumer<DashboardProvider>(
-          builder: (context, provider, child) {
-            if (provider.isLoading && provider.summary == null) {
-              return _buildLoadingState();
-            }
+    return RefreshIndicator(
+      onRefresh: _refreshData,
+      color: AppColors.primary,
+      child: Consumer<DashboardProvider>(
+        builder: (context, provider, child) {
+          if (provider.isLoading && provider.summary == null) {
+            return _buildLoadingState();
+          }
 
-            if (provider.error != null) {
-              return _buildErrorState(provider.error!);
-            }
+          if (provider.error != null) {
+            return _buildErrorState(provider.error!);
+          }
 
-            return _buildDashboardContent(provider);
-          },
-        ),
+          return _buildDashboardContent(provider);
+        },
       ),
-      floatingActionButton: _buildFAB(),
-    );
-  }
-
-  PreferredSizeWidget _buildAppBar() {
-    return AppBar(
-      title: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Tableau de Bord',
-            style: AppTextStyles.headlineSmall.copyWith(
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          Text(
-            'Bonjour! 👋',
-            style: AppTextStyles.bodySmall.copyWith(
-              color: AppColors.textSecondary,
-            ),
-          ),
-        ],
-      ),
-      actions: [
-        IconButton(
-          icon: const Icon(Icons.notifications_outlined),
-          onPressed: () {
-            // TODO: Afficher les notifications
-          },
-        ),
-      ],
     );
   }
 
@@ -272,17 +235,6 @@ class _DashboardPageState extends State<DashboardPage> {
           ],
         ),
       ),
-    );
-  }
-
-  Widget _buildFAB() {
-    return FloatingActionButton.extended(
-      onPressed: () {
-        AppRoutes.navigateTo(context, AppRoutes.transactionAdd);
-      },
-      icon: const Icon(Icons.add),
-      label: const Text('Nouvelle transaction'),
-      backgroundColor: AppColors.primary,
     );
   }
 }

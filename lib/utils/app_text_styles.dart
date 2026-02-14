@@ -80,7 +80,7 @@ class AppTextStyles {
   /// Title Large - Titre de carte principal
   static const TextStyle titleLarge = TextStyle(
     fontFamily: fontFamily,
-    fontSize: 22,
+    fontSize: 18,
     fontWeight: FontWeight.w500,
     letterSpacing: 0,
     height: 1.27,
@@ -90,9 +90,9 @@ class AppTextStyles {
   /// Title Medium - Titre de liste
   static const TextStyle titleMedium = TextStyle(
     fontFamily: fontFamily,
-    fontSize: 16,
+    fontSize: 12,
     fontWeight: FontWeight.w500,
-    letterSpacing: 0.15,
+    letterSpacing: 0.1,
     height: 1.50,
     color: AppColors.textPrimary,
   );

@@ -3,7 +3,7 @@ import '../../utils/app_colors.dart';
 import '../../utils/app_text_styles.dart';
 import '../../utils/app_dimensions.dart';
 
-/// Page de statistiques (PLACEHOLDER - ÉTAPE 4)
+/// Page de statistiques (contenu uniquement avec tabs intégrés)
 class StatisticsPage extends StatefulWidget {
   const StatisticsPage({super.key});
 
@@ -29,30 +29,36 @@ class _StatisticsPageState extends State<StatisticsPage>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.background,
-      appBar: AppBar(
-        title: const Text('Statistiques'),
-        bottom: TabBar(
-          controller: _tabController,
-          labelColor: AppColors.primary,
-          unselectedLabelColor: AppColors.textSecondary,
-          indicatorColor: AppColors.primary,
-          tabs: const [
-            Tab(text: 'Graphiques'),
-            Tab(text: 'Rapports'),
-            Tab(text: 'Analyse'),
-          ],
+    return Column(
+      children: [
+        // TabBar intégré dans le contenu
+        Container(
+          color: AppColors.white,
+          child: TabBar(
+            controller: _tabController,
+            labelColor: AppColors.primary,
+            unselectedLabelColor: AppColors.textSecondary,
+            indicatorColor: AppColors.primary,
+            tabs: const [
+              Tab(text: 'Graphiques'),
+              Tab(text: 'Rapports'),
+              Tab(text: 'Analyse'),
+            ],
+          ),
         ),
-      ),
-      body: TabBarView(
-        controller: _tabController,
-        children: [
-          _buildGraphicsTab(),
-          _buildReportsTab(),
-          _buildAnalysisTab(),
-        ],
-      ),
+
+        // Contenu des tabs
+        Expanded(
+          child: TabBarView(
+            controller: _tabController,
+            children: [
+              _buildGraphicsTab(),
+              _buildReportsTab(),
+              _buildAnalysisTab(),
+            ],
+          ),
+        ),
+      ],
     );
   }
 

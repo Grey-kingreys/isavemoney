@@ -11,7 +11,7 @@ import '../../widgets/common/loading_view.dart';
 import '../../widgets/common/error_view.dart';
 import 'transaction_item.dart';
 
-/// Page de liste des transactions
+/// Page de liste des transactions (contenu uniquement, sans Scaffold)
 class TransactionList extends StatefulWidget {
   const TransactionList({super.key});
 
@@ -47,71 +47,50 @@ class _TransactionListState extends State<TransactionList> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.background,
-      appBar: _buildAppBar(),
-      body: Consumer2<TransactionProvider, CategoryProvider>(
-        builder: (context, transactionProvider, categoryProvider, child) {
-          if (transactionProvider.isLoading &&
-              !transactionProvider.hasTransactions) {
-            return const LoadingView(message: 'Chargement des transactions...');
-          }
-
-          if (transactionProvider.error != null) {
-            return ErrorView.loading(
-              message: transactionProvider.error,
-              onRetry: _loadData,
-            );
-          }
-
-          if (!transactionProvider.hasTransactions) {
-            return EmptyView.noTransactions(
-              onAction: () =>
-                  AppRoutes.navigateTo(context, AppRoutes.transactionAdd),
-            );
-          }
-
-          return RefreshIndicator(
-            onRefresh: _refreshData,
-            child: Column(
-              children: [
-                // Filtres
-                _buildFilters(categoryProvider),
-
-                // Liste des transactions
-                Expanded(
-                  child: _buildTransactionList(
-                    transactionProvider,
-                    categoryProvider,
-                  ),
-                ),
-              ],
-            ),
+    return Consumer2<TransactionProvider, CategoryProvider>(
+      builder: (context, transactionProvider, categoryProvider, child) {
+        if (transactionProvider.isLoading &&
+            !transactionProvider.hasTransactions) {
+          return const LoadingView(
+            message: 'Chargement des transactions...',
+            fullScreen: false,
           );
-        },
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () =>
-            AppRoutes.navigateTo(context, AppRoutes.transactionAdd),
-        backgroundColor: AppColors.primary,
-        child: const Icon(Icons.add),
-      ),
-    );
-  }
+        }
 
-  PreferredSizeWidget _buildAppBar() {
-    return AppBar(
-      title: const Text('Transactions'),
-      actions: [
-        IconButton(
-          icon: const Icon(Icons.search),
-          onPressed: () => _showSearchDialog(),
-        ),
-        IconButton(
-          icon: const Icon(Icons.filter_list),
-          onPressed: () => _showFilterDialog(),
-        ),
-      ],
+        if (transactionProvider.error != null) {
+          return ErrorView.loading(
+            message: transactionProvider.error,
+            onRetry: _loadData,
+            fullScreen: false,
+          );
+        }
+
+        if (!transactionProvider.hasTransactions) {
+          return EmptyView.noTransactions(
+            onAction: () =>
+                AppRoutes.navigateTo(context, AppRoutes.transactionAdd),
+            fullScreen: false,
+          );
+        }
+
+        return RefreshIndicator(
+          onRefresh: _refreshData,
+          child: Column(
+            children: [
+              // Filtres
+              _buildFilters(categoryProvider),
+
+              // Liste des transactions
+              Expanded(
+                child: _buildTransactionList(
+                  transactionProvider,
+                  categoryProvider,
+                ),
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 
@@ -298,59 +277,6 @@ class _TransactionListState extends State<TransactionList> {
       context,
       AppRoutes.transactionEdit,
       arguments: {'id': transactionId},
-    );
-  }
-
-  void _showSearchDialog() {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Rechercher'),
-        content: TextField(
-          decoration: const InputDecoration(
-            hintText: 'Titre ou description...',
-            prefixIcon: Icon(Icons.search),
-          ),
-          onChanged: (query) {
-            context.read<TransactionProvider>().searchTransactions(query);
-          },
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Fermer'),
-          ),
-        ],
-      ),
-    );
-  }
-
-  void _showFilterDialog() {
-    showModalBottomSheet(
-      context: context,
-      shape: const RoundedRectangleBorder(
-        borderRadius: AppDimensions.borderRadiusBottomSheet,
-      ),
-      builder: (context) => Container(
-        padding: AppDimensions.padding2XL,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('Filtres', style: AppTextStyles.headlineSmall),
-            AppDimensions.verticalSpace(AppDimensions.space24),
-
-            // TODO: Ajouter filtres avancés (période, montant, etc.)
-            ElevatedButton(
-              onPressed: () {
-                context.read<TransactionProvider>().clearFilters();
-                Navigator.pop(context);
-              },
-              child: const Text('Réinitialiser les filtres'),
-            ),
-          ],
-        ),
-      ),
     );
   }
 }

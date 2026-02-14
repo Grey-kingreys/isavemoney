@@ -1,19 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:isavemoney/views/budgets/budget_list.dart';
 import 'package:isavemoney/views/transactions/transaction_form_page.dart';
-import 'package:isavemoney/views/transactions/transaction_list.dart';
 import '../views/splash_screen.dart';
 import '../views/onboarding_screen.dart';
-import '../views/dashboard/dashboard_page.dart';
-import '../views/transactions/transaction_list.dart';
-import '../views/transactions/transaction_form_page.dart';
-import '../views/budgets/budget_list.dart';
 import '../views/budgets/budget_form_page.dart';
-import '../views/statistics/statistics_page.dart';
-import '../views/settings/settings_page.dart';
 import '../views/categories/categories_page.dart';
 import '../views/settings/accounts_page.dart';
 import '../views/savings/savings_goals_page.dart';
+import '../widgets/navigation/main_scaffold.dart';
 
 /// Classe de gestion des routes de l'application
 class AppRoutes {
@@ -46,22 +39,22 @@ class AppRoutes {
   static Map<String, WidgetBuilder> get routes => {
     splash: (context) => const SplashScreen(),
     onboarding: (context) => const OnboardingScreen(),
-    dashboard: (context) => const DashboardPage(),
-    home: (context) => const DashboardPage(),
 
-    // Transactions - Routes fonctionnelles
-    transactions: (context) => const TransactionList(),
+    // Route principale avec bottom navigation
+    dashboard: (context) => const MainScaffold(initialIndex: 0),
+    home: (context) => const MainScaffold(initialIndex: 0),
+
+    // Routes vers les onglets spécifiques (utilise MainScaffold)
+    transactions: (context) => const MainScaffold(initialIndex: 1),
+    budgets: (context) => const MainScaffold(initialIndex: 2),
+    statistics: (context) => const MainScaffold(initialIndex: 3),
+    settings: (context) => const MainScaffold(initialIndex: 4),
+
+    // Formulaires (pages indépendantes avec leur propre Scaffold)
     transactionAdd: (context) => const TransactionForm(),
-
-    // Budgets - Routes fonctionnelles
-    budgets: (context) => const BudgetList(),
     budgetAdd: (context) => const BudgetFormPage(),
 
-    // Statistiques
-    statistics: (context) => const StatisticsPage(),
-
-    // Paramètres
-    settings: (context) => const SettingsPage(),
+    // Paramètres (pages indépendantes)
     settingsCategories: (context) => const CategoriesPage(),
     settingsAccounts: (context) => const AccountsPage(),
     settingsBackup: (context) => const SavingsGoalsPage(),

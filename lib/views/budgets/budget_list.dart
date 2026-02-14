@@ -12,7 +12,7 @@ import '../../widgets/common/empty_view.dart';
 import '../../widgets/common/loading_view.dart';
 import '../../widgets/common/error_view.dart';
 
-/// Page de liste des budgets
+/// Page de liste des budgets (contenu uniquement avec tabs intégrés)
 class BudgetList extends StatefulWidget {
   const BudgetList({super.key});
 
@@ -55,71 +55,61 @@ class _BudgetListState extends State<BudgetList>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.background,
-      appBar: AppBar(
-        title: const Text('Budgets'),
-        bottom: TabBar(
-          controller: _tabController,
-          labelColor: AppColors.primary,
-          unselectedLabelColor: AppColors.textSecondary,
-          indicatorColor: AppColors.primary,
-          tabs: const [
-            Tab(text: 'Actifs'),
-            Tab(text: 'Tous'),
-          ],
-        ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.info_outline),
-            onPressed: _showBudgetInfo,
-          ),
-        ],
-      ),
-      body: Consumer2<BudgetProvider, CategoryProvider>(
-        builder: (context, budgetProvider, categoryProvider, child) {
-          if (budgetProvider.isLoading && !budgetProvider.hasBudgets) {
-            return const LoadingView(message: 'Chargement des budgets...');
-          }
-
-          if (budgetProvider.error != null) {
-            return ErrorView.loading(
-              message: budgetProvider.error,
-              onRetry: _loadData,
-            );
-          }
-
-          return TabBarView(
+    return Column(
+      children: [
+        // TabBar intégré dans le contenu
+        Container(
+          color: AppColors.white,
+          child: TabBar(
             controller: _tabController,
-            children: [
-              _buildBudgetList(
-                budgetProvider.activeBudgets,
-                categoryProvider,
-                budgetProvider,
-              ),
-              _buildBudgetList(
-                budgetProvider.budgets,
-                categoryProvider,
-                budgetProvider,
-              ),
+            labelColor: AppColors.primary,
+            unselectedLabelColor: AppColors.textSecondary,
+            indicatorColor: AppColors.primary,
+            tabs: const [
+              Tab(text: 'Actifs'),
+              Tab(text: 'Tous'),
             ],
-          );
-        },
-      ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () async {
-          final result = await AppRoutes.navigateTo(
-            context,
-            AppRoutes.budgetAdd,
-          );
-          if (result == true) {
-            _refreshData();
-          }
-        },
-        backgroundColor: AppColors.budget,
-        icon: const Icon(Icons.add),
-        label: const Text('Créer un budget'),
-      ),
+          ),
+        ),
+
+        // Contenu des tabs
+        Expanded(
+          child: Consumer2<BudgetProvider, CategoryProvider>(
+            builder: (context, budgetProvider, categoryProvider, child) {
+              if (budgetProvider.isLoading && !budgetProvider.hasBudgets) {
+                return const LoadingView(
+                  message: 'Chargement des budgets...',
+                  fullScreen: false,
+                );
+              }
+
+              if (budgetProvider.error != null) {
+                return ErrorView.loading(
+                  message: budgetProvider.error,
+                  onRetry: _loadData,
+                  fullScreen: false,
+                );
+              }
+
+              return TabBarView(
+                controller: _tabController,
+                children: [
+                  _buildBudgetList(
+                    budgetProvider.activeBudgets,
+                    categoryProvider,
+                    budgetProvider,
+                  ),
+                  _buildBudgetList(
+                    budgetProvider.budgets,
+                    categoryProvider,
+                    budgetProvider,
+                  ),
+                ],
+              );
+            },
+          ),
+        ),
+      ],
     );
   }
 
@@ -652,27 +642,5 @@ class _BudgetListState extends State<BudgetList>
         );
       }
     }
-  }
-
-  void _showBudgetInfo() {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('À propos des budgets'),
-        content: const Text(
-          'Les budgets vous aident à contrôler vos dépenses par catégorie.\n\n'
-          '• Définissez une limite par catégorie\n'
-          '• Choisissez la période (jour, semaine, mois, année)\n'
-          '• Recevez des alertes quand vous approchez de la limite\n'
-          '• Suivez votre progression en temps réel',
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('OK'),
-          ),
-        ],
-      ),
-    );
   }
 }

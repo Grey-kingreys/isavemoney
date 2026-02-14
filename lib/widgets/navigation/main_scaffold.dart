@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import '../../utils/app_colors.dart';
 import '../../utils/app_text_styles.dart';
+import '../../utils/app_dimensions.dart';
+import '../../app/routes.dart';
+import '../../widgets/app_drawer.dart';
 import '../../views/dashboard/dashboard_page.dart';
 import '../../views/transactions/transaction_list.dart';
 import '../../views/budgets/budget_list.dart';
@@ -26,13 +29,13 @@ class _MainScaffoldState extends State<MainScaffold> {
     _currentIndex = widget.initialIndex;
   }
 
-  // Liste des pages
+  // Liste des pages (sans Scaffold)
   final List<Widget> _pages = [
-    DashboardPage(),
-    TransactionList(),
-    BudgetList(),
-    StatisticsPage(),
-    SettingsPage(),
+    const DashboardPage(),
+    const TransactionList(),
+    const BudgetList(),
+    const StatisticsPage(),
+    const SettingsPage(),
   ];
 
   void _onItemTapped(int index) {
@@ -44,9 +47,128 @@ class _MainScaffoldState extends State<MainScaffold> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.background,
+      appBar: _buildAppBar(),
+      drawer: _shouldShowDrawer() ? const AppDrawer() : null,
       body: IndexedStack(index: _currentIndex, children: _pages),
       bottomNavigationBar: _buildBottomNavigationBar(),
+      floatingActionButton: _buildFAB(),
     );
+  }
+
+  PreferredSizeWidget _buildAppBar() {
+    switch (_currentIndex) {
+      case 0: // Dashboard
+        return AppBar(
+          title: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Tableau de Bord',
+                style: AppTextStyles.headlineSmall.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Text(
+                'Bonjour! 👋',
+                style: AppTextStyles.bodySmall.copyWith(
+                  color: AppColors.textSecondary,
+                ),
+              ),
+            ],
+          ),
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.notifications_outlined),
+              onPressed: () {
+                // TODO: Afficher les notifications
+              },
+            ),
+          ],
+        );
+
+      case 1: // Transactions
+        return AppBar(
+          title: const Text('Transactions'),
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.search),
+              onPressed: () {
+                // TODO: Recherche
+              },
+            ),
+            IconButton(
+              icon: const Icon(Icons.filter_list),
+              onPressed: () {
+                // TODO: Filtres
+              },
+            ),
+          ],
+        );
+
+      case 2: // Budgets
+        return AppBar(
+          title: const Text('Budgets'),
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.info_outline),
+              onPressed: () {
+                // TODO: Info budgets
+              },
+            ),
+          ],
+        );
+
+      case 3: // Statistiques
+        return AppBar(title: const Text('Statistiques'));
+
+      case 4: // Paramètres
+        return AppBar(title: const Text('Paramètres'));
+
+      default:
+        return AppBar(title: const Text('BudgetBuddy'));
+    }
+  }
+
+  bool _shouldShowDrawer() {
+    // Afficher le drawer sur toutes les pages
+    return true;
+  }
+
+  Widget? _buildFAB() {
+    switch (_currentIndex) {
+      case 0: // Dashboard
+        return FloatingActionButton.extended(
+          onPressed: () {
+            AppRoutes.navigateTo(context, AppRoutes.transactionAdd);
+          },
+          icon: const Icon(Icons.add),
+          label: const Text('Nouvelle transaction'),
+          backgroundColor: AppColors.primary,
+        );
+
+      case 1: // Transactions
+        return FloatingActionButton(
+          onPressed: () {
+            AppRoutes.navigateTo(context, AppRoutes.transactionAdd);
+          },
+          backgroundColor: AppColors.primary,
+          child: const Icon(Icons.add),
+        );
+
+      case 2: // Budgets
+        return FloatingActionButton.extended(
+          onPressed: () {
+            AppRoutes.navigateTo(context, AppRoutes.budgetAdd);
+          },
+          backgroundColor: AppColors.budget,
+          icon: const Icon(Icons.add),
+          label: const Text('Créer un budget'),
+        );
+
+      default:
+        return null;
+    }
   }
 
   Widget _buildBottomNavigationBar() {

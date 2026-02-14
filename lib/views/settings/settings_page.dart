@@ -4,116 +4,112 @@ import '../../utils/app_text_styles.dart';
 import '../../utils/app_dimensions.dart';
 import '../../app/routes.dart';
 
-/// Page de paramètres (PLACEHOLDER - ÉTAPE 5)
+/// Page de paramètres (contenu uniquement, sans Scaffold)
 class SettingsPage extends StatelessWidget {
   const SettingsPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.background,
-      appBar: AppBar(title: const Text('Paramètres')),
-      body: ListView(
-        padding: AppDimensions.paddingPage,
-        children: [
-          _buildSection(
-            title: 'GÉNÉRAL',
-            children: [
-              _buildSettingTile(
-                icon: Icons.category,
-                title: 'Catégories',
-                subtitle: 'Gérer vos catégories',
-                onTap: () {
-                  AppRoutes.navigateTo(context, AppRoutes.settingsCategories);
+    return ListView(
+      padding: AppDimensions.paddingPage,
+      children: [
+        _buildSection(
+          title: 'GÉNÉRAL',
+          children: [
+            _buildSettingTile(
+              icon: Icons.category,
+              title: 'Catégories',
+              subtitle: 'Gérer vos catégories',
+              onTap: () {
+                AppRoutes.navigateTo(context, AppRoutes.settingsCategories);
+              },
+            ),
+            _buildSettingTile(
+              icon: Icons.account_balance,
+              title: 'Comptes bancaires',
+              subtitle: 'Gérer vos comptes',
+              onTap: () {
+                AppRoutes.navigateTo(context, AppRoutes.settingsAccounts);
+              },
+            ),
+          ],
+        ),
+        AppDimensions.verticalSpace(AppDimensions.space24),
+        _buildSection(
+          title: 'DONNÉES',
+          children: [
+            _buildSettingTile(
+              icon: Icons.backup,
+              title: 'Sauvegarde',
+              subtitle: 'Sauvegarder et restaurer',
+              onTap: () {
+                AppRoutes.navigateTo(context, AppRoutes.settingsBackup);
+              },
+            ),
+            _buildSettingTile(
+              icon: Icons.download,
+              title: 'Export CSV',
+              subtitle: 'Exporter vos données',
+              onTap: () {
+                _showComingSoon(context, 'Export CSV');
+              },
+            ),
+          ],
+        ),
+        AppDimensions.verticalSpace(AppDimensions.space24),
+        _buildSection(
+          title: 'PRÉFÉRENCES',
+          children: [
+            _buildSettingTile(
+              icon: Icons.palette,
+              title: 'Thème',
+              subtitle: 'Clair / Sombre',
+              trailing: Switch(
+                value: false,
+                onChanged: (value) {
+                  _showComingSoon(context, 'Thème sombre');
                 },
               ),
-              _buildSettingTile(
-                icon: Icons.account_balance,
-                title: 'Comptes bancaires',
-                subtitle: 'Gérer vos comptes',
-                onTap: () {
-                  AppRoutes.navigateTo(context, AppRoutes.settingsAccounts);
-                },
-              ),
-            ],
-          ),
-          AppDimensions.verticalSpace(AppDimensions.space24),
-          _buildSection(
-            title: 'DONNÉES',
-            children: [
-              _buildSettingTile(
-                icon: Icons.backup,
-                title: 'Sauvegarde',
-                subtitle: 'Sauvegarder et restaurer',
-                onTap: () {
-                  AppRoutes.navigateTo(context, AppRoutes.settingsBackup);
-                },
-              ),
-              _buildSettingTile(
-                icon: Icons.download,
-                title: 'Export CSV',
-                subtitle: 'Exporter vos données',
-                onTap: () {
-                  _showComingSoon(context, 'Export CSV');
-                },
-              ),
-            ],
-          ),
-          AppDimensions.verticalSpace(AppDimensions.space24),
-          _buildSection(
-            title: 'PRÉFÉRENCES',
-            children: [
-              _buildSettingTile(
-                icon: Icons.palette,
-                title: 'Thème',
-                subtitle: 'Clair / Sombre',
-                trailing: Switch(
-                  value: false,
-                  onChanged: (value) {
-                    _showComingSoon(context, 'Thème sombre');
-                  },
-                ),
-              ),
-              _buildSettingTile(
-                icon: Icons.language,
-                title: 'Langue',
-                subtitle: 'Français',
-                onTap: () {
-                  _showComingSoon(context, 'Changement de langue');
-                },
-              ),
-              _buildSettingTile(
-                icon: Icons.attach_money,
-                title: 'Devise',
-                subtitle: 'EUR (€)',
-                onTap: () {
-                  _showComingSoon(context, 'Changement de devise');
-                },
-              ),
-            ],
-          ),
-          AppDimensions.verticalSpace(AppDimensions.space24),
-          _buildSection(
-            title: 'À PROPOS',
-            children: [
-              _buildSettingTile(
-                icon: Icons.info,
-                title: 'Version',
-                subtitle: '1.0.0',
-                trailing: const SizedBox.shrink(),
-              ),
-              _buildSettingTile(
-                icon: Icons.help,
-                title: 'Aide',
-                subtitle: 'Besoin d\'aide ?',
-                onTap: () {
-                  _showComingSoon(context, 'Aide');
-                },
-              ),
-            ],
-          ),
-        ],
-      ),
+            ),
+            _buildSettingTile(
+              icon: Icons.language,
+              title: 'Langue',
+              subtitle: 'Français',
+              onTap: () {
+                _showComingSoon(context, 'Changement de langue');
+              },
+            ),
+            _buildSettingTile(
+              icon: Icons.attach_money,
+              title: 'Devise',
+              subtitle: 'EUR (€)',
+              onTap: () {
+                _showComingSoon(context, 'Changement de devise');
+              },
+            ),
+          ],
+        ),
+        AppDimensions.verticalSpace(AppDimensions.space24),
+        _buildSection(
+          title: 'À PROPOS',
+          children: [
+            _buildSettingTile(
+              icon: Icons.info,
+              title: 'Version',
+              subtitle: '1.0.0',
+              trailing: const SizedBox.shrink(),
+            ),
+            _buildSettingTile(
+              icon: Icons.help,
+              title: 'Aide',
+              subtitle: 'Besoin d\'aide ?',
+              onTap: () {
+                _showComingSoon(context, 'Aide');
+              },
+            ),
+          ],
+        ),
+      ],
     );
   }
 
