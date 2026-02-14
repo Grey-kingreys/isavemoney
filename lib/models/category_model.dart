@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../utils/app_colors.dart';
 
 /// Modèle de catégorie
 class CategoryModel {
@@ -18,7 +19,7 @@ class CategoryModel {
     required this.icon,
     required this.color,
     required this.categoryType,
-    this.isDefault = false,
+    this.isDefault = true,
     this.isActive = true,
     this.sortOrder = 0,
     DateTime? createdAt,
@@ -79,14 +80,9 @@ class CategoryModel {
     );
   }
 
-  /// Obtient la couleur en tant que Color
+  /// Obtient la couleur Flutter depuis le hex
   Color getColor() {
-    try {
-      final hex = color.replaceAll('#', '');
-      return Color(int.parse('FF$hex', radix: 16));
-    } catch (e) {
-      return Colors.grey;
-    }
+    return AppColors.fromHex(color);
   }
 
   /// Vérifie si c'est une catégorie de revenu
@@ -103,7 +99,6 @@ class CategoryModel {
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
-
     return other is CategoryModel && other.id == id;
   }
 

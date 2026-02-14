@@ -17,6 +17,11 @@ class BudgetBuddyApp extends StatelessWidget {
     // Wrapper avec tous les providers nécessaires
     return MultiProvider(
       providers: [
+        // Provider pour les catégories - DOIT être en premier car les autres en dépendent
+        ChangeNotifierProvider(
+          create: (_) => CategoryProvider()..loadCategories(),
+        ),
+
         // Provider pour le dashboard
         ChangeNotifierProvider(create: (_) => DashboardProvider()),
 
@@ -25,9 +30,6 @@ class BudgetBuddyApp extends StatelessWidget {
 
         // Provider pour les budgets
         ChangeNotifierProvider(create: (_) => BudgetProvider()),
-
-        // Provider pour les catégories
-        ChangeNotifierProvider(create: (_) => CategoryProvider()),
 
         // Provider pour les paramètres
         ChangeNotifierProvider(create: (_) => SettingsProvider()),

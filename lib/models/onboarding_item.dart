@@ -1,41 +1,46 @@
 /// Modèle pour un élément d'onboarding
 class OnboardingItem {
+  final String image; // Emoji ou path vers l'image
   final String title;
   final String description;
-  final String image;
-  final String? icon;
 
   const OnboardingItem({
+    required this.image,
     required this.title,
     required this.description,
-    required this.image,
-    this.icon,
   });
 }
 
-/// Liste des slides d'onboarding
+/// Données des slides d'onboarding
 class OnboardingData {
   static const List<OnboardingItem> items = [
     OnboardingItem(
-      title: 'Gérez votre Budget',
-      description:
-          'Prenez le contrôle de vos finances avec un suivi simple et efficace de vos revenus et dépenses.',
       image: '💰',
-      icon: null,
+      title: 'Gérez votre budget',
+      description:
+          'Suivez facilement vos revenus et dépenses au quotidien. '
+          'Gardez le contrôle total de vos finances personnelles.',
     ),
     OnboardingItem(
-      title: 'Suivez vos Dépenses',
-      description:
-          'Visualisez où va votre argent avec des graphiques clairs et des catégories personnalisables.',
       image: '📊',
-      icon: null,
+      title: 'Visualisez vos finances',
+      description:
+          'Analysez vos habitudes de dépenses avec des graphiques clairs. '
+          'Comprenez où va votre argent en un coup d\'œil.',
     ),
     OnboardingItem(
-      title: 'Atteignez vos Objectifs',
-      description:
-          'Définissez des objectifs d\'épargne et suivez votre progression pour réaliser vos projets.',
       image: '🎯',
-      icon: null,
+      title: 'Définissez vos objectifs',
+      description:
+          'Créez des budgets par catégorie et recevez des alertes. '
+          'Atteignez vos objectifs financiers plus facilement.',
+    ),
+    OnboardingItem(
+      image: '🔒',
+      title: 'Vos données en sécurité',
+      description:
+          'Toutes vos données restent sur votre appareil. '
+          'Aucune connexion internet requise, confidentialité garantie.',
     ),
   ];
 }

@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import '../../utils/app_colors.dart';
 import '../../utils/app_text_styles.dart';
-import '../../utils/app_dimensions.dart';
 import '../../views/dashboard/dashboard_page.dart';
 import '../../views/transactions/transaction_list.dart';
 import '../../views/budgets/budget_list.dart';
 import '../../views/statistics/statistics_page.dart';
 import '../../views/settings/settings_page.dart';
-import '../app_drawer.dart';
 
 /// Scaffold principal avec Bottom Navigation Bar
 class MainScaffold extends StatefulWidget {
@@ -21,7 +19,6 @@ class MainScaffold extends StatefulWidget {
 
 class _MainScaffoldState extends State<MainScaffold> {
   late int _currentIndex;
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
@@ -30,10 +27,10 @@ class _MainScaffoldState extends State<MainScaffold> {
   }
 
   // Liste des pages
-  final List<Widget> _pages = const [
+  final List<Widget> _pages = [
     DashboardPage(),
-    TransactionListPage(),
-    BudgetListPage(),
+    TransactionList(),
+    BudgetList(),
     StatisticsPage(),
     SettingsPage(),
   ];
@@ -47,8 +44,6 @@ class _MainScaffoldState extends State<MainScaffold> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key: _scaffoldKey,
-      drawer: const AppDrawer(),
       body: IndexedStack(index: _currentIndex, children: _pages),
       bottomNavigationBar: _buildBottomNavigationBar(),
     );

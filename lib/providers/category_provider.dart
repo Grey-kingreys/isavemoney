@@ -26,12 +26,12 @@ class CategoryProvider with ChangeNotifier {
     _error = null;
 
     try {
-      _categories = await _categoryService.getActiveCategories();
+      _categories = await _categoryService.getAllCategories();
       _expenseCategories = _categories
-          .where((cat) => cat.categoryType == 'expense')
+          .where((cat) => cat.categoryType == 'expense' && cat.isActive)
           .toList();
       _incomeCategories = _categories
-          .where((cat) => cat.categoryType == 'income')
+          .where((cat) => cat.categoryType == 'income' && cat.isActive)
           .toList();
     } catch (e) {
       _error = 'Erreur lors du chargement des catégories: $e';
@@ -42,30 +42,43 @@ class CategoryProvider with ChangeNotifier {
   }
 
   /// Obtient une catégorie par son ID
-  CategoryModel? getCategoryById(int id) {
+  Future<CategoryModel?> getCategoryById(int id) async {
     try {
-      return _categories.firstWhere((cat) => cat.id == id);
+      return await _categoryService.getCategoryById(id);
     } catch (e) {
+      debugPrint('Erreur lors du chargement de la catégorie: $e');
       return null;
+    }
+  }
+
+  /// Obtient le nom d'une catégorie par son ID
+  String getCategoryName(int id) {
+    try {
+      final category = _categories.firstWhere((cat) => cat.id == id);
+      return category.name;
+    } catch (e) {
+      return 'Catégorie inconnue';
+    }
+  }
+
+  /// Obtient l'icône d'une catégorie par son ID
+  String getCategoryIcon(int id) {
+    try {
+      final category = _categories.firstWhere((cat) => cat.id == id);
+      return category.icon;
+    } catch (e) {
+      return '📦';
     }
   }
 
   /// Ajoute une nouvelle catégorie
   Future<bool> addCategory(CategoryModel category) async {
     try {
-      // Vérifie si le nom existe déjà
-      final exists = await _categoryService.categoryExistsByName(category.name);
-      if (exists) {
-        _error = 'Une catégorie avec ce nom existe déjà';
-        notifyListeners();
-        return false;
-      }
-
       await _categoryService.createCategory(category);
       await loadCategories();
       return true;
     } catch (e) {
-      _error = 'Erreur lors de l\'ajout de la catégorie: $e';
+      _error = 'Erreur lors de l\'ajout: $e';
       debugPrint(_error);
       notifyListeners();
       return false;
@@ -75,17 +88,6 @@ class CategoryProvider with ChangeNotifier {
   /// Met à jour une catégorie
   Future<bool> updateCategory(CategoryModel category) async {
     try {
-      // Vérifie si le nom existe déjà (sauf pour cette catégorie)
-      final exists = await _categoryService.categoryExistsByName(
-        category.name,
-        excludeId: category.id,
-      );
-      if (exists) {
-        _error = 'Une catégorie avec ce nom existe déjà';
-        notifyListeners();
-        return false;
-      }
-
       await _categoryService.updateCategory(category);
       await loadCategories();
       return true;
@@ -104,9 +106,7 @@ class CategoryProvider with ChangeNotifier {
       await loadCategories();
       return true;
     } catch (e) {
-      _error = e.toString().contains('utilisée')
-          ? e.toString()
-          : 'Erreur lors de la suppression: $e';
+      _error = 'Erreur lors de la suppression: $e';
       debugPrint(_error);
       notifyListeners();
       return false;
@@ -128,58 +128,6 @@ class CategoryProvider with ChangeNotifier {
       debugPrint(_error);
       notifyListeners();
       return false;
-    }
-  }
-
-  /// Réorganise les catégories
-  Future<bool> reorderCategories(
-    List<CategoryModel> reorderedCategories,
-  ) async {
-    try {
-      final ids = reorderedCategories.map((cat) => cat.id!).toList();
-      await _categoryService.reorderCategories(ids);
-
-      // Met à jour localement
-      _categories = reorderedCategories;
-      _expenseCategories = _categories
-          .where((cat) => cat.categoryType == 'expense')
-          .toList();
-      _incomeCategories = _categories
-          .where((cat) => cat.categoryType == 'income')
-          .toList();
-
-      notifyListeners();
-      return true;
-    } catch (e) {
-      _error = 'Erreur lors de la réorganisation: $e';
-      debugPrint(_error);
-      notifyListeners();
-      return false;
-    }
-  }
-
-  /// Obtient les catégories les plus utilisées
-  Future<List<Map<String, dynamic>>> getMostUsedCategories({
-    int limit = 5,
-  }) async {
-    try {
-      return await _categoryService.getMostUsedCategories(limit: limit);
-    } catch (e) {
-      debugPrint('Erreur lors du chargement des catégories populaires: $e');
-      return [];
-    }
-  }
-
-  /// Obtient les statistiques par catégorie
-  Future<List<Map<String, dynamic>>> getCategoryStatistics(
-    DateTime start,
-    DateTime end,
-  ) async {
-    try {
-      return await _categoryService.getCategoryStatistics(start, end);
-    } catch (e) {
-      debugPrint('Erreur lors du chargement des statistiques: $e');
-      return [];
     }
   }
 

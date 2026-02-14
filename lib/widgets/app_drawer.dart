@@ -29,7 +29,7 @@ class AppDrawer extends StatelessWidget {
                     context,
                     icon: Icons.dashboard_rounded,
                     title: 'Tableau de bord',
-                    route: AppRoutes.home,
+                    route: AppRoutes.dashboard,
                     gradient: AppColors.primaryGradient,
                   ),
                   _buildMenuItem(
@@ -176,7 +176,8 @@ class AppDrawer extends StatelessWidget {
     required String route,
     required Gradient gradient,
   }) {
-    final isCurrentRoute = ModalRoute.of(context)?.settings.name == route;
+    final currentRoute = ModalRoute.of(context)?.settings.name;
+    final isCurrentRoute = currentRoute == route;
 
     return Container(
       margin: const EdgeInsets.symmetric(
@@ -191,9 +192,9 @@ class AppDrawer extends StatelessWidget {
         color: Colors.transparent,
         child: InkWell(
           onTap: () {
-            Navigator.pop(context);
+            Navigator.pop(context); // Ferme le drawer
             if (!isCurrentRoute) {
-              // AppRoutes.navigateAndReplace(context, route);
+              AppRoutes.navigateTo(context, route);
             }
           },
           borderRadius: AppDimensions.borderRadiusMD,
@@ -261,7 +262,7 @@ class AppDrawer extends StatelessWidget {
       ),
       trailing: const Icon(Icons.chevron_right, color: AppColors.textTertiary),
       onTap: () {
-        Navigator.pop(context);
+        Navigator.pop(context); // Ferme le drawer
         AppRoutes.navigateTo(context, route);
       },
     );

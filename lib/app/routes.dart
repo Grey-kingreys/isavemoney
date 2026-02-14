@@ -1,13 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:isavemoney/views/budgets/budget_form_page.dart';
 import 'package:isavemoney/views/budgets/budget_list.dart';
-import 'package:isavemoney/views/settings/settings_page.dart';
-import 'package:isavemoney/views/statistics/statistics_page.dart';
 import 'package:isavemoney/views/transactions/transaction_form_page.dart';
 import 'package:isavemoney/views/transactions/transaction_list.dart';
 import '../views/splash_screen.dart';
 import '../views/onboarding_screen.dart';
 import '../views/dashboard/dashboard_page.dart';
+import '../views/transactions/transaction_list.dart';
+import '../views/transactions/transaction_form_page.dart';
+import '../views/budgets/budget_list.dart';
+import '../views/budgets/budget_form_page.dart';
+import '../views/statistics/statistics_page.dart';
+import '../views/settings/settings_page.dart';
+import '../views/categories/categories_page.dart';
+import '../views/settings/accounts_page.dart';
+import '../views/savings/savings_goals_page.dart';
 
 /// Classe de gestion des routes de l'application
 class AppRoutes {
@@ -40,17 +46,25 @@ class AppRoutes {
   static Map<String, WidgetBuilder> get routes => {
     splash: (context) => const SplashScreen(),
     onboarding: (context) => const OnboardingScreen(),
-    // Route vers le nouveau dashboard
     dashboard: (context) => const DashboardPage(),
-    home: (context) =>
-        const DashboardPage(), // home pointe aussi vers le dashboard
-      // Les autres routes seront ajoutées au fur et à mesure
-      transactions: (context) => const TransactionListPage(),
-      transactionAdd: (context) => const TransactionFormPage(),
-      budgets: (context) => const BudgetListPage(),
-      budgetAdd: (context) => const BudgetFormPage(),
-      statistics: (context) => const StatisticsPage(),
-      settings: (context) => const SettingsPage(),
+    home: (context) => const DashboardPage(),
+
+    // Transactions - Routes fonctionnelles
+    transactions: (context) => const TransactionList(),
+    transactionAdd: (context) => const TransactionForm(),
+
+    // Budgets - Routes fonctionnelles
+    budgets: (context) => const BudgetList(),
+    budgetAdd: (context) => const BudgetFormPage(),
+
+    // Statistiques
+    statistics: (context) => const StatisticsPage(),
+
+    // Paramètres
+    settings: (context) => const SettingsPage(),
+    settingsCategories: (context) => const CategoriesPage(),
+    settingsAccounts: (context) => const AccountsPage(),
+    settingsBackup: (context) => const SavingsGoalsPage(),
   };
 
   /// Génère une route dynamique avec arguments
@@ -61,17 +75,14 @@ class AppRoutes {
         final args = settings.arguments as Map<String, dynamic>?;
         return MaterialPageRoute(
           builder: (context) =>
-              TransactionFormPage(transactionId: args?['id'] as int?),
+              TransactionForm(transactionId: args?['id'] as int?),
         );
-        return null; // Temporaire jusqu'à la création de la page
 
       case budgetEdit:
         final args = settings.arguments as Map<String, dynamic>?;
         return MaterialPageRoute(
-          builder: (context) =>
-              BudgetFormPage(budgetId: args?['id'] as int?),
+          builder: (context) => BudgetFormPage(budgetId: args?['id'] as int?),
         );
-        return null; // Temporaire jusqu'à la création de la page
 
       default:
         return null;
